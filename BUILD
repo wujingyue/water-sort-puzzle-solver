@@ -25,6 +25,7 @@ cc_binary(
     srcs = ["main.cc"],
     deps = [
         ":solver",
-        "@com_google_absl//absl/flags:flag"
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/flags:parse",
     ],
 )

@@ -5,7 +5,7 @@
 #include "solver.h"
 
 TEST(SolverTest, Small) {
-  Solver solver;
+  Solver solver(10);
   std::vector<std::pair<int, int>> solution;
   bool succeeded =
       solver.Solve(State({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4), solution);
@@ -13,8 +13,16 @@ TEST(SolverTest, Small) {
   EXPECT_EQ(solution.size(), 3);
 }
 
+TEST(SolverTest, NotEnoughDepth) {
+  Solver solver(2);
+  std::vector<std::pair<int, int>> solution;
+  bool succeeded =
+      solver.Solve(State({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4), solution);
+  ASSERT_FALSE(succeeded);
+}
+
 TEST(SolverTest, Medium) {
-  Solver solver;
+  Solver solver(50);
   std::vector<std::pair<int, int>> solution;
   bool succeeded = solver.Solve(State(
                                     {
@@ -37,7 +45,7 @@ TEST(SolverTest, Medium) {
 }
 
 TEST(SolverTest, Large) {
-  Solver solver;
+  Solver solver(50);
   std::vector<std::pair<int, int>> solution;
   bool succeeded = solver.Solve(State(
                                     {

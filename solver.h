@@ -9,12 +9,15 @@
 
 class Solver {
  public:
+  Solver(int max_num_moves): max_num_moves_(max_num_moves) {}
   bool Solve(const State& initial_state,
              std::vector<std::pair<int, int>>& solution);
 
  private:
   bool DfsWithBound(State x, const int bound,
                     std::vector<std::pair<int, int>>& solution);
+
+  const int max_num_moves_;
 
   // Must be reset before each call of DfsWithBound.
   std::unordered_set<State> visited_;

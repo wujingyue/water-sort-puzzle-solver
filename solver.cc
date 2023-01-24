@@ -43,8 +43,7 @@ bool Solver::DfsWithBound(State x, const int bound,
 
 bool Solver::Solve(const State& initial_state,
                    std::vector<std::pair<int, int>>& solution) {
-  constexpr int kMaxDepth = 100;
-  for (int bound = 0; bound < kMaxDepth; bound++) {
+  for (int bound = 0; bound <= max_num_moves_; bound++) {
     std::cerr << "Searching with bound " << bound << "..." << std::endl;
     const auto begin_time = std::chrono::steady_clock::now();
     visited_.clear();
@@ -54,7 +53,7 @@ bool Solver::Solve(const State& initial_state,
               << std::chrono::duration_cast<std::chrono::milliseconds>(
                      end_time - begin_time)
                      .count()
-              << "ms. " << visited_.size() << " states have been visited."
+              << "ms. This search visited " << visited_.size() << " states."
               << std::endl;
     if (succeeded) {
       return true;

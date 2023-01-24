@@ -23,5 +23,8 @@ cc_test(
 cc_binary(
     name = "main",
     srcs = ["main.cc"],
-    deps = [":solver"],
+    deps = [
+        ":solver",
+        "@com_google_absl//absl/flags:flag"
+    ],
 )

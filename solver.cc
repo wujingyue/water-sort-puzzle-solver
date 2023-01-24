@@ -1,63 +1,64 @@
 #include "solver.h"
 
 #include <algorithm>
+#include <chrono>
+#include <iostream>
 #include <queue>
 
 #include "state.h"
 
-void Solver::Backtrack(const State& end,
-                       const std::unordered_map<State, State>& parent,
-                       std::vector<std::pair<int, int>>& solution) const {
-  State x = end;
-  while (true) {
-    State p = parent.at(x);
-    if (p == x) {
-      break;
-    }
-    std::pair<int, int> from_to = p.HowTo(x);
-    solution.push_back(from_to);
-    x = p;
-  }
-  std::reverse(solution.begin(), solution.end());
-}
-
-bool Solver::Solve(const State& initial_state,
-                   std::vector<std::pair<int, int>>& solution) const {
-  std::queue<State> q;
-  q.push(initial_state);
-
-  std::unordered_map<State, State> parent;
-  parent[initial_state] = initial_state;
-
-  solution.clear();
-  if (initial_state.Done()) {
+bool Solver::DfsWithBound(State x, const int bound,
+                          std::vector<std::pair<int, int>>& solution) {
+  if (x.Done()) {
     return true;
   }
 
-  while (!q.empty()) {
-    State x = q.front();
-    q.pop();
+  if ((int)solution.size() + x.EstimatedCost() > bound) {
+    return false;
+  }
 
-    State old_x = x;
-    for (int from = 0; from < x.NumTubes(); from++) {
-      for (int to = 0; to < x.NumTubes(); to++) {
-        if (from == to) {
-          continue;
+  if (visited_.count(x) != 0) {
+    return false;
+  }
+  visited_.insert(x);
+
+  for (int from = 0; from < x.NumTubes(); from++) {
+    for (int to = 0; to < x.NumTubes(); to++) {
+      if (from == to) {
+        continue;
+      }
+      if (const int water = x.Pour(from, to); water > 0) {
+        solution.push_back({from, to});
+        if (DfsWithBound(x, bound, solution)) {
+          return true;
         }
-        if (x.Pour(from, to)) {
-          if (parent.count(x) == 0) {
-            q.push(x);
-            parent[x] = old_x;
-            if (x.Done()) {
-              Backtrack(x, parent, solution);
-              return true;
-            }
-          }
-          x = old_x;
-        }
+        solution.pop_back();
+        x.Pour(to, from, water);
       }
     }
   }
 
+  return false;
+}
+
+bool Solver::Solve(const State& initial_state,
+                   std::vector<std::pair<int, int>>& solution) {
+  constexpr int kMaxDepth = 100;
+  for (int bound = 0; bound < kMaxDepth; bound++) {
+    std::cerr << "Searching with bound " << bound << "..." << std::endl;
+    const auto begin_time = std::chrono::steady_clock::now();
+    visited_.clear();
+    const bool succeeded = DfsWithBound(initial_state, bound, solution);
+    const auto end_time = std::chrono::steady_clock::now();
+    std::cerr << (succeeded ? "Succeeded" : "Failed") << " after "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(
+                     end_time - begin_time)
+                     .count()
+              << "ms. " << visited_.size() << " states have been visited."
+              << std::endl;
+    if (succeeded) {
+      return true;
+    }
+  }
   return false;
 }

@@ -7,18 +7,18 @@
 
 class State {
  public:
-  State() {}
   State(const std::vector<std::vector<int>>& tubes, int volume);
-  bool Pour(int from, int to);
+  int Pour(int from, int to);
+  void Pour(int from, int to, int amount);
   size_t Hash() const;
   bool Done() const;
+  int EstimatedCost() const;
   int NumTubes() const { return tubes_.size(); }
   int Volume() const { return volume_; }
   bool operator==(const State& other) const {
     return tubes_ == other.tubes_;
   }
   void Dump() const;
-  std::pair<int, int> HowTo(const State& other) const;
 
  private:
   std::vector<std::vector<int>> tubes_;

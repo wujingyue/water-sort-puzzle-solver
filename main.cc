@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
   int volume;
   std::cin >> num_tubes >> volume;
   std::string line;
-  assert(getline(std::cin, line));
+  getline(std::cin, line);
 
   std::vector<std::vector<int>> tubes(num_tubes, std::vector<int>());
   std::unordered_map<std::string, int> color_id;

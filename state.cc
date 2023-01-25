@@ -133,12 +133,14 @@ int State::EstimatedCost() const {
   return num_segments - water / volume_;
 }
 
-void State::Dump() const {
+std::string State::DebugString() const {
+  std::string str;
   for (const auto& tube : tubes_) {
-    std::cerr << "|";
+    absl::StrAppend(&str, "|");
     for (const int color : tube) {
-      std::cerr << " " << color;
+      absl::StrAppend(&str, " ", color);
     }
-    std::cerr << std::endl;
+    absl::StrAppend(&str, "\n");
   }
+  return str;
 }

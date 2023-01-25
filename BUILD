@@ -14,6 +14,7 @@ cc_library(
     hdrs = ["solver.h"],
     deps = [
         ":state",
+        "@com_google_absl//absl/log",
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
     ],

@@ -28,7 +28,7 @@ class State {
     return tubes_ == other.tubes_;
   }
 
-  void Dump() const;
+  std::string DebugString() const;
 
  private:
   std::vector<std::vector<int>> tubes_;

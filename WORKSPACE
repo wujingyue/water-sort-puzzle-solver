@@ -7,11 +7,12 @@ http_archive(
     strip_prefix = "googletest-b796f7d44681514f58a683a3a71ff17c94edb0c1",
 )
 
-# https://github.com/abseil/abseil-cpp/releases/tag/20220623.1
+
+# https://github.com/abseil/abseil-cpp/releases/tag/20230124.rc2
 http_archive(
     name = "com_google_absl",
-    urls = ["https://github.com/abseil/abseil-cpp/archive/8c0b94e793a66495e0b1f34a5eb26bd7dc672db0.zip"],
-    strip_prefix = "abseil-cpp-8c0b94e793a66495e0b1f34a5eb26bd7dc672db0",
+    urls = ["https://github.com/abseil/abseil-cpp/archive/609770cefb495bd3913d3ba4fd215f8738533304.zip"],
+    strip_prefix = "abseil-cpp-609770cefb495bd3913d3ba4fd215f8738533304",
 )
 
 http_archive(

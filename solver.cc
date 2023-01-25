@@ -2,9 +2,9 @@
 
 #include <algorithm>
 #include <chrono>
-#include <iostream>
 #include <queue>
 
+#include "absl/log/log.h"
 #include "absl/strings/str_cat.h"
 
 #include "state.h"
@@ -52,17 +52,16 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
 
   std::vector<std::pair<int, int>> solution;
   for (int bound = 0; bound <= max_num_moves_; bound++) {
-    std::cerr << "Searching with bound " << bound << "..." << std::endl;
+    LOG(INFO) << "Searching with bound " << bound << "...";
     const auto begin_time = std::chrono::steady_clock::now();
     visited_.clear();
     const bool succeeded = DfsWithBound(bound, *initial_state, solution);
     const auto end_time = std::chrono::steady_clock::now();
-    std::cerr << (succeeded ? "Succeeded" : "Failed") << " after "
+    LOG(INFO) << (succeeded ? "Succeeded" : "Failed") << " after "
               << std::chrono::duration_cast<std::chrono::milliseconds>(
                      end_time - begin_time)
                      .count()
-              << "ms. This search visited " << visited_.size() << " states."
-              << std::endl;
+              << "ms. This search visited " << visited_.size() << " states.";
     if (succeeded) {
       return solution;
     }

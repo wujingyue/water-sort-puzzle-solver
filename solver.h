@@ -17,7 +17,7 @@ class Solver {
       const std::vector<std::vector<int>>& tubes, int volume);
 
  private:
-  bool DfsWithBound(State x, const int bound,
+  bool DfsWithBound(const int bound, State& x,
                     std::vector<std::pair<int, int>>& solution);
 
   const int max_num_moves_;

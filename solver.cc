@@ -9,7 +9,7 @@
 
 #include "state.h"
 
-bool Solver::DfsWithBound(State x, const int bound,
+bool Solver::DfsWithBound(const int bound, State& x,
                           std::vector<std::pair<int, int>>& solution) {
   if (x.Done()) {
     return true;
@@ -31,7 +31,7 @@ bool Solver::DfsWithBound(State x, const int bound,
       }
       if (const int water = x.Pour(from, to); water > 0) {
         solution.push_back({from, to});
-        if (DfsWithBound(x, bound, solution)) {
+        if (DfsWithBound(bound, x, solution)) {
           return true;
         }
         solution.pop_back();
@@ -55,7 +55,7 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
     std::cerr << "Searching with bound " << bound << "..." << std::endl;
     const auto begin_time = std::chrono::steady_clock::now();
     visited_.clear();
-    const bool succeeded = DfsWithBound(*initial_state, bound, solution);
+    const bool succeeded = DfsWithBound(bound, *initial_state, solution);
     const auto end_time = std::chrono::steady_clock::now();
     std::cerr << (succeeded ? "Succeeded" : "Failed") << " after "
               << std::chrono::duration_cast<std::chrono::milliseconds>(

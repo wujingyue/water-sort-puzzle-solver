@@ -8,7 +8,10 @@ cc_library(
     name = "solver",
     srcs = ["solver.cc"],
     hdrs = ["solver.h"],
-    deps = [":state"],
+    deps = [
+        ":state",
+        "@com_google_absl//absl/status:statusor",
+    ],
 )
 
 cc_test(

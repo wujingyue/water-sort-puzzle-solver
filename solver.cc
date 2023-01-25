@@ -5,6 +5,8 @@
 #include <iostream>
 #include <queue>
 
+#include "absl/strings/str_cat.h"
+
 #include "state.h"
 
 bool Solver::DfsWithBound(State x, const int bound,
@@ -41,8 +43,9 @@ bool Solver::DfsWithBound(State x, const int bound,
   return false;
 }
 
-bool Solver::Solve(const State& initial_state,
-                   std::vector<std::pair<int, int>>& solution) {
+absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
+    const State& initial_state) {
+  std::vector<std::pair<int, int>> solution;
   for (int bound = 0; bound <= max_num_moves_; bound++) {
     std::cerr << "Searching with bound " << bound << "..." << std::endl;
     const auto begin_time = std::chrono::steady_clock::now();
@@ -56,8 +59,9 @@ bool Solver::Solve(const State& initial_state,
               << "ms. This search visited " << visited_.size() << " states."
               << std::endl;
     if (succeeded) {
-      return true;
+      return solution;
     }
   }
-  return false;
+  return absl::NotFoundError(absl::StrCat("Failed to find a solution within ",
+                                          max_num_moves_, " moves."));
 }

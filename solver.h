@@ -5,13 +5,16 @@
 #include <utility>
 #include <vector>
 
+#include "absl/status/statusor.h"
+
 #include "state.h"
 
 class Solver {
  public:
   Solver(int max_num_moves): max_num_moves_(max_num_moves) {}
-  bool Solve(const State& initial_state,
-             std::vector<std::pair<int, int>>& solution);
+
+  absl::StatusOr<std::vector<std::pair<int, int>>> Solve(
+      const State& initial_state);
 
  private:
   bool DfsWithBound(State x, const int bound,

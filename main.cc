@@ -42,16 +42,16 @@ int main(int argc, char* argv[]) {
   }
 
   Solver solver(absl::GetFlag(FLAGS_max_num_moves));
-  std::vector<std::pair<int, int>> solution;
-  if (solver.Solve(State(tubes, volume), solution)) {
+  const auto solution = solver.Solve(State(tubes, volume));
+  if (solution.ok()) {
     int move = 0;
-    for (const auto& [from, to]: solution) {
+    for (const auto& [from, to]: *solution) {
       move++;
       std::cout << "Move " << move << ": " << from + 1 << " " << to + 1
                 << std::endl;
     }
   } else {
-    std::cout << "Failed to find a solution" << std::endl;
+    std::cout << solution.status().message() << std::endl;
   }
 
   return 0;

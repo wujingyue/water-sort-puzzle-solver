@@ -2,6 +2,10 @@ cc_library(
     name = "state",
     srcs = ["state.cc"],
     hdrs = ["state.h"],
+    deps = [
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+    ],
 )
 
 cc_library(
@@ -11,6 +15,7 @@ cc_library(
     deps = [
         ":state",
         "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
     ],
 )
 

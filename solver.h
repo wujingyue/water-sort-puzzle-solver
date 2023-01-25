@@ -14,7 +14,7 @@ class Solver {
   Solver(int max_num_moves): max_num_moves_(max_num_moves) {}
 
   absl::StatusOr<std::vector<std::pair<int, int>>> Solve(
-      const State& initial_state);
+      const std::vector<std::vector<int>>& tubes, int volume);
 
  private:
   bool DfsWithBound(State x, const int bound,

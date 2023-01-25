@@ -5,19 +5,29 @@
 #include <utility>
 #include <vector>
 
+#include "absl/status/statusor.h"
+
 class State {
  public:
-  State(const std::vector<std::vector<int>>& tubes, int volume);
-  int Pour(int from, int to);
-  void Pour(int from, int to, int amount);
-  size_t Hash() const;
-  bool Done() const;
-  int EstimatedCost() const;
+  static absl::StatusOr<State> Create(
+      const std::vector<std::vector<int>>& tubes, int volume);
+
   int NumTubes() const { return tubes_.size(); }
   int Volume() const { return volume_; }
+
+  int Pour(int from, int to);
+  void Pour(int from, int to, int amount);
+
+  size_t Hash() const;
+
+  bool Done() const;
+
+  int EstimatedCost() const;
+
   bool operator==(const State& other) const {
     return tubes_ == other.tubes_;
   }
+
   void Dump() const;
 
  private:

@@ -7,7 +7,7 @@
 TEST(SolverTest, Small) {
   Solver solver(10);
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
-      solver.Solve(State({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4));
+      solver.Solve({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4);
   ASSERT_TRUE(solution.ok());
   EXPECT_EQ(solution->size(), 3);
 }
@@ -15,14 +15,14 @@ TEST(SolverTest, Small) {
 TEST(SolverTest, NotEnoughDepth) {
   Solver solver(2);
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
-      solver.Solve(State({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4));
+      solver.Solve({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4);
   ASSERT_FALSE(solution.ok());
 }
 
 TEST(SolverTest, Medium) {
   Solver solver(50);
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
-      solver.Solve(State(
+      solver.Solve(
           {
               {8, 1, 1, 5},
               {4, 9, 6, 7},
@@ -36,7 +36,7 @@ TEST(SolverTest, Medium) {
               {},
               {},
           },
-          4));
+          4);
   ASSERT_TRUE(solution.ok());
   EXPECT_EQ(solution->size(), 30);
 }
@@ -44,7 +44,7 @@ TEST(SolverTest, Medium) {
 TEST(SolverTest, Large) {
   Solver solver(50);
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
-      solver.Solve(State(
+      solver.Solve(
           {
               {7, 7, 4, 8},
               {11, 5, 10, 9},
@@ -61,7 +61,7 @@ TEST(SolverTest, Large) {
               {},
               {},
           },
-          4));
+          4);
   ASSERT_TRUE(solution.ok());
   EXPECT_EQ(solution->size(), 41);
 }

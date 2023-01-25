@@ -44,13 +44,18 @@ bool Solver::DfsWithBound(State x, const int bound,
 }
 
 absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
-    const State& initial_state) {
+    const std::vector<std::vector<int>>& tubes, const int volume) {
+  absl::StatusOr<State> initial_state = State::Create(tubes, volume);
+  if (!initial_state.ok()) {
+    return initial_state.status();
+  }
+
   std::vector<std::pair<int, int>> solution;
   for (int bound = 0; bound <= max_num_moves_; bound++) {
     std::cerr << "Searching with bound " << bound << "..." << std::endl;
     const auto begin_time = std::chrono::steady_clock::now();
     visited_.clear();
-    const bool succeeded = DfsWithBound(initial_state, bound, solution);
+    const bool succeeded = DfsWithBound(*initial_state, bound, solution);
     const auto end_time = std::chrono::steady_clock::now();
     std::cerr << (succeeded ? "Succeeded" : "Failed") << " after "
               << std::chrono::duration_cast<std::chrono::milliseconds>(

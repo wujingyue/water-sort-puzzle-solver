@@ -4,21 +4,43 @@
 #include <iostream>
 #include <unordered_map>
 
-State::State(const std::vector<std::vector<int>>& tubes, const int volume)
-    : tubes_(tubes), volume_(volume) {
+#include "absl/strings/str_cat.h"
+
+/*static*/ absl::StatusOr<State> State::Create(
+    const std::vector<std::vector<int>>& tubes, const int volume) {
+  // Sanity checks.
+  if (volume <= 0) {
+    return absl::InvalidArgumentError(absl::StrCat(
+        "`volume` is expected to be positive, but ", volume, " was given."));
+  }
+
   std::unordered_map<int, int> volume_of_color;
-  assert(volume > 0);
-  for (auto& tube : tubes_) {
-    assert((int)tube.size() <= volume);
-    tube.reserve(volume);
+  for (size_t i = 0; i < tubes.size(); i++) {
+    const auto& tube = tubes[i];
+    if ((int)tube.size() > volume) {
+      return absl::InvalidArgumentError(
+          absl::StrCat("The height of tube ", i, " (", tube.size(),
+                       ") is larger than the given volume (", volume, ")."));
+    }
     for (const int color : tube) {
       volume_of_color[color]++;
     }
   }
   for (const auto& [color, v] : volume_of_color) {
-    (void)color;
-    assert(v == volume);
+    if (v != volume) {
+      return absl::InvalidArgumentError(
+          absl::StrCat("The volume of color ", color, " (", v,
+                       ") does not equal the given volume (", volume, ")."));
+    }
   }
+
+  State s;
+  s.tubes_ = tubes;
+  s.volume_ = volume;
+  for (auto& tube : s.tubes_) {
+    tube.reserve(volume);
+  }
+  return s;
 }
 
 static int NumSegments(const std::vector<int>& v) {

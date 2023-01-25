@@ -42,16 +42,22 @@ int main(int argc, char* argv[]) {
   }
 
   Solver solver(absl::GetFlag(FLAGS_max_num_moves));
-  const auto solution = solver.Solve(State(tubes, volume));
-  if (solution.ok()) {
-    int move = 0;
-    for (const auto& [from, to]: *solution) {
-      move++;
-      std::cout << "Move " << move << ": " << from + 1 << " " << to + 1
-                << std::endl;
+  const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
+      solver.Solve(tubes, volume);
+  if (!solution.ok()) {
+    std::cout << "Color -> ID:" << std::endl;
+    for (const auto& [color, id] : color_id) {
+      std::cout << "  " << color << " -> " << id << std::endl;
     }
-  } else {
     std::cout << solution.status().message() << std::endl;
+    return 1;
+  }
+
+  int move = 0;
+  for (const auto& [from, to]: *solution) {
+    move++;
+    std::cout << "Move " << move << ": " << from + 1 << " " << to + 1
+              << std::endl;
   }
 
   return 0;

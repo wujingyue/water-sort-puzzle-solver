@@ -22,6 +22,8 @@ class State {
 
   bool Done() const;
 
+  // The heuristic function used for IDA*. It must be admissible, i.e.,
+  // `s.EstimatedCost()` <= the actual cost from `s` to the nearest end state.
   int EstimatedCost() const;
 
   bool operator==(const State& other) const {

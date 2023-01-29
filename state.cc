@@ -95,6 +95,7 @@ int State::Pour(const int from, const int to) {
 }
 
 size_t State::Hash() const {
+  // The idea is taken from https://stackoverflow.com/a/72073933.
   size_t seed = NumTubes() * volume_;
   for (const auto& tube : tubes_) {
     const int water = tube.size();

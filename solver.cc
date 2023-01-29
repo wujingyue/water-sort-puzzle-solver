@@ -50,6 +50,12 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
     return initial_state.status();
   }
 
+  // We chose to use the iterative deepening A* (IDA*) algorithm, because IDA*
+  // 1. has a much smaller footprint than BFS and A*,
+  // 2. allows to plug in a heuristic function that significantly speeds
+  // up the search, and
+  // 3. is guaranteed to find the shortest solution as long as the
+  // heuristic function is admissible.
   std::vector<std::pair<int, int>> solution;
   for (int bound = 0; bound <= max_num_moves_; bound++) {
     LOG(INFO) << "Searching with bound " << bound << "...";

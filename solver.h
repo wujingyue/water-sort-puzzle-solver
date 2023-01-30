@@ -24,8 +24,8 @@ class Solver {
   const int max_num_moves_;
 
   // Must be reset before each call of DfsWithBound. IDA* typically doesn't
-  // avoid duplicates. However, for this particular problem, we found avoiding
-  // duplicates speeds up the search a lot.
+  // deduplicate. However, for this particular problem, we found deduplication
+  // speeds up the search a lot (e.g. from a minute down to a second).
   std::unordered_map<State, int> shortest_moves_;
 };
 

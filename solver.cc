@@ -21,6 +21,8 @@ bool Solver::DfsWithBound(const int bound, State& x,
     return false;
   }
 
+  // To find the shortest solution, we revisit a state when its number of moves
+  // gets improved.
   if (shortest_moves_.count(x) != 0 && shortest_moves_.at(x) <= moves) {
     return false;
   }

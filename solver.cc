@@ -9,43 +9,58 @@
 
 #include "state.h"
 
-bool Solver::DfsWithBound(const int bound, State& x,
-                          std::vector<std::pair<int, int>>& solution) {
-  if (x.Done()) {
-    return true;
-  }
+class DfsWithBound {
+ public:
+  DfsWithBound(const int bound): bound_(bound) {}
 
-  const int moves = solution.size();
+  bool Search(State& x, std::vector<std::pair<int, int>>& solution) {
+    if (x.Done()) {
+      return true;
+    }
 
-  if (moves + x.EstimatedCost() > bound) {
-    return false;
-  }
+    const int moves = solution.size();
 
-  // To find the shortest solution, we revisit a state when its number of moves
-  // gets improved.
-  if (shortest_moves_.count(x) != 0 && shortest_moves_.at(x) <= moves) {
-    return false;
-  }
-  shortest_moves_[x] = moves;
+    if (moves + x.EstimatedCost() > bound_) {
+      return false;
+    }
 
-  for (int from = 0; from < x.NumTubes(); from++) {
-    for (int to = 0; to < x.NumTubes(); to++) {
-      if (from == to) {
-        continue;
-      }
-      if (const int water = x.Pour(from, to); water > 0) {
-        solution.push_back({from, to});
-        if (DfsWithBound(bound, x, solution)) {
-          return true;
+    // To find the shortest solution, we revisit a state when its number of
+    // moves gets improved.
+    if (shortest_moves_.count(x) != 0 && shortest_moves_.at(x) <= moves) {
+      return false;
+    }
+    shortest_moves_[x] = moves;
+
+    for (int from = 0; from < x.NumTubes(); from++) {
+      for (int to = 0; to < x.NumTubes(); to++) {
+        if (from == to) {
+          continue;
         }
-        solution.pop_back();
-        x.Pour(to, from, water);
+        if (const int water = x.Pour(from, to); water > 0) {
+          solution.push_back({from, to});
+          if (Search(x, solution)) {
+            return true;
+          }
+          solution.pop_back();
+          x.Pour(to, from, water);
+        }
       }
     }
+
+    return false;
   }
 
-  return false;
-}
+  int NumVisitedStates() const { return shortest_moves_.size(); }
+
+ private:
+  // IDA* typically doesn't deduplicate. However, for this particular problem,
+  // we found deduplication speeds up the search a lot (e.g. from a minute down
+  // to a second).
+  std::unordered_map<State, int> shortest_moves_;
+
+  const int bound_;
+};
+
 
 absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
     const std::vector<std::vector<int>>& tubes, const int volume) {
@@ -55,7 +70,7 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
   }
 
   // We chose to use the iterative deepening A* (IDA*) algorithm, because IDA*
-  // 1. has a much smaller footprint than BFS and A*,
+  // 1. has a much smaller footprint than BFS and A* and is therefore faster,
   // 2. allows to plug in a heuristic function that significantly speeds
   // up the search, and
   // 3. is guaranteed to find the shortest solution as long as the
@@ -64,14 +79,14 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
   for (int bound = 0; bound <= max_num_moves_; bound++) {
     LOG(INFO) << "Searching with bound " << bound << "...";
     const auto begin_time = std::chrono::steady_clock::now();
-    shortest_moves_.clear();
-    const bool succeeded = DfsWithBound(bound, *initial_state, solution);
+    DfsWithBound searcher(bound);
+    const bool succeeded = searcher.Search(*initial_state, solution);
     const auto end_time = std::chrono::steady_clock::now();
     LOG(INFO) << (succeeded ? "Succeeded" : "Failed") << " after "
               << std::chrono::duration_cast<std::chrono::milliseconds>(
                      end_time - begin_time)
                      .count()
-              << "ms. This search visited " << shortest_moves_.size()
+              << "ms. This search visited " << searcher.NumVisitedStates()
               << " states.";
     if (succeeded) {
       return solution;

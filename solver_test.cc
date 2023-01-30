@@ -38,7 +38,7 @@ TEST(SolverTest, Medium) {
           },
           4);
   ASSERT_TRUE(solution.ok());
-  EXPECT_EQ(solution->size(), 30);
+  EXPECT_EQ(solution->size(), 29);
 }
 
 TEST(SolverTest, Large) {

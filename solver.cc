@@ -15,14 +15,17 @@ bool Solver::DfsWithBound(const int bound, State& x,
     return true;
   }
 
-  if ((int)solution.size() + x.EstimatedCost() > bound) {
+  const int moves = solution.size();
+
+  if (moves + x.EstimatedCost() > bound) {
     return false;
   }
 
-  if (visited_.count(x) != 0) {
+  if (shortest_moves_.count(x) != 0 && shortest_moves_.at(x) <= moves) {
     return false;
   }
-  visited_.insert(x);
+  shortest_moves_[x] = moves;
+  num_shortest_moves_++;
 
   for (int from = 0; from < x.NumTubes(); from++) {
     for (int to = 0; to < x.NumTubes(); to++) {
@@ -60,14 +63,15 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
   for (int bound = 0; bound <= max_num_moves_; bound++) {
     LOG(INFO) << "Searching with bound " << bound << "...";
     const auto begin_time = std::chrono::steady_clock::now();
-    visited_.clear();
+    shortest_moves_.clear();
     const bool succeeded = DfsWithBound(bound, *initial_state, solution);
     const auto end_time = std::chrono::steady_clock::now();
     LOG(INFO) << (succeeded ? "Succeeded" : "Failed") << " after "
               << std::chrono::duration_cast<std::chrono::milliseconds>(
                      end_time - begin_time)
                      .count()
-              << "ms. This search visited " << visited_.size() << " states.";
+              << "ms. This search visited " << shortest_moves_.size()
+              << " states.";
     if (succeeded) {
       return solution;
     }

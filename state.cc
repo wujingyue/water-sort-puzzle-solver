@@ -67,15 +67,23 @@ int State::Pour(const int from, const int to) {
   auto& from_tube = tubes_[from];
   auto& to_tube = tubes_[to];
 
+  // It's pointless to pour from a full and one-color tube.
   if ((int)from_tube.size() == volume_ && NumSegments(from_tube) == 1) {
     return 0;
   }
 
   if (to_tube.empty()) {
+    // If there are multiple empty tubes, pour into the first one to reduce
+    // state redundancy.
     for (int i = 0; i < to; i++) {
       if (tubes_[i].empty()) {
         return 0;
       }
+    }
+
+    // It's pointless to pour from a one-color tube to an empty tube.
+    if (NumSegments(from_tube) == 1) {
+      return 0;
     }
   }
 
@@ -91,6 +99,7 @@ int State::Pour(const int from, const int to) {
 
     water++;
   }
+
   return water;
 }
 

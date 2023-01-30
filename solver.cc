@@ -27,7 +27,6 @@ bool Solver::DfsWithBound(const int bound, State& x,
     return false;
   }
   shortest_moves_[x] = moves;
-  num_shortest_moves_++;
 
   for (int from = 0; from < x.NumTubes(); from++) {
     for (int to = 0; to < x.NumTubes(); to++) {

@@ -12,10 +12,11 @@ TEST(SolverTest, Small) {
   EXPECT_EQ(solution->size(), 3);
 }
 
-TEST(SolverTest, NotEnoughDepth) {
-  Solver solver(2);
+TEST(SolverTest, NoSolutions) {
+  Solver solver(50);
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
-      solver.Solve({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4);
+      solver.Solve({{1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {}},
+                   4);
   ASSERT_FALSE(solution.ok());
 }
 

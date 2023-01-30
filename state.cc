@@ -1,9 +1,9 @@
 #include "state.h"
 
-#include <cassert>
 #include <iostream>
 #include <unordered_map>
 
+#include "absl/log/check.h"
 #include "absl/strings/str_cat.h"
 
 /*static*/ absl::StatusOr<State> State::Create(
@@ -130,7 +130,7 @@ int State::EstimatedCost() const {
     water += tube.size();
     num_segments += NumSegments(tube);
   }
-  assert(water % volume_ == 0);
+  CHECK(water % volume_ == 0);
   return num_segments - water / volume_;
 }
 

@@ -3,6 +3,7 @@ cc_library(
     srcs = ["state.cc"],
     hdrs = ["state.h"],
     deps = [
+        "@com_google_absl//absl/log:check",
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
     ],

@@ -132,7 +132,7 @@ bool State::Done() const {
   return true;
 }
 
-int State::EstimatedCost() const {
+int State::EstimatedMovesToEnd() const {
   int water = 0;
   int num_segments = 0;
   for (const auto& tube : tubes_) {

@@ -29,7 +29,7 @@ class DfsWithBound {
       return true;
     }
 
-    const int estimated_moves = moves_from_start + x.EstimatedCost();
+    const int estimated_moves = moves_from_start + x.EstimatedMovesToEnd();
     if (estimated_moves > bound_) {
       next_bound_ = std::min(next_bound_, estimated_moves);
       return false;

@@ -6,15 +6,7 @@
 
 #include "solver.h"
 
-#include "absl/flags/flag.h"
-#include "absl/flags/parse.h"
-
-ABSL_FLAG(int, max_num_moves, 50,
-          "The maximum number of moves that IDA* will search for.");
-
 int main(int argc, char* argv[]) {
-  absl::ParseCommandLine(argc, argv);
-
   int num_tubes;
   int volume;
   std::cin >> num_tubes >> volume;
@@ -41,7 +33,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  Solver solver(absl::GetFlag(FLAGS_max_num_moves));
+  Solver solver;
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
       solver.Solve(tubes, volume);
   if (!solution.ok()) {

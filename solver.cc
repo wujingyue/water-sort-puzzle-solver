@@ -14,22 +14,26 @@ class DfsWithBound {
   DfsWithBound(const int bound): bound_(bound) {}
 
   bool Search(State& x, std::vector<std::pair<int, int>>& solution) {
+    num_visits_++;
+
+    // To find the shortest solution, we revisit a state when its number of
+    // moves gets improved.
+    const int moves_from_start = solution.size();
+    if (shortest_moves_.count(x) != 0 &&
+        shortest_moves_.at(x) <= moves_from_start) {
+      return false;
+    }
+    shortest_moves_[x] = moves_from_start;
+
     if (x.Done()) {
       return true;
     }
 
-    const int moves = solution.size();
-
-    if (moves + x.EstimatedCost() > bound_) {
+    const int estimated_moves = moves_from_start + x.EstimatedCost();
+    if (estimated_moves > bound_) {
+      next_bound_ = std::min(next_bound_, estimated_moves);
       return false;
     }
-
-    // To find the shortest solution, we revisit a state when its number of
-    // moves gets improved.
-    if (shortest_moves_.count(x) != 0 && shortest_moves_.at(x) <= moves) {
-      return false;
-    }
-    shortest_moves_[x] = moves;
 
     for (int from = 0; from < x.NumTubes(); from++) {
       for (int to = 0; to < x.NumTubes(); to++) {
@@ -52,6 +56,10 @@ class DfsWithBound {
 
   int NumVisitedStates() const { return shortest_moves_.size(); }
 
+  int NumVisits() const { return num_visits_; }
+
+  int NextBound() const { return next_bound_; }
+
  private:
   // IDA* typically doesn't deduplicate. However, for this particular problem,
   // we found deduplication speeds up the search a lot (e.g. from a minute down
@@ -59,6 +67,10 @@ class DfsWithBound {
   std::unordered_map<State, int> shortest_moves_;
 
   const int bound_;
+
+  int num_visits_ = 0;
+
+  int next_bound_ = std::numeric_limits<int>::max();
 };
 
 
@@ -76,7 +88,8 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
   // 3. is guaranteed to find the shortest solution as long as the
   // heuristic function is admissible.
   std::vector<std::pair<int, int>> solution;
-  for (int bound = 0; bound <= max_num_moves_; bound++) {
+  int bound = 0;
+  while (bound < std::numeric_limits<int>::max()) {
     LOG(INFO) << "Searching with bound " << bound << "...";
     const auto begin_time = std::chrono::steady_clock::now();
     DfsWithBound searcher(bound);
@@ -87,11 +100,12 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
                      end_time - begin_time)
                      .count()
               << "ms. This search visited " << searcher.NumVisitedStates()
-              << " states.";
+              << " states " << searcher.NumVisits() << " times.";
     if (succeeded) {
       return solution;
     }
+    bound = searcher.NextBound();
   }
-  return absl::NotFoundError(absl::StrCat("Failed to find a solution within ",
-                                          max_num_moves_, " moves."));
+
+  return absl::NotFoundError(absl::StrCat("Failed to find a solution."));
 }

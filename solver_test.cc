@@ -5,15 +5,23 @@
 #include "solver.h"
 
 TEST(SolverTest, Small) {
-  Solver solver(10);
+  Solver solver;
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
       solver.Solve({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4);
   ASSERT_TRUE(solution.ok());
   EXPECT_EQ(solution->size(), 3);
 }
 
+TEST(SolverTest, ZeroMoves) {
+  Solver solver;
+  const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
+      solver.Solve({{1, 1, 1, 1}, {2, 2, 2, 2}, {}}, 4);
+  ASSERT_TRUE(solution.ok());
+  EXPECT_EQ(solution->size(), 0);
+}
+
 TEST(SolverTest, NoSolutions) {
-  Solver solver(50);
+  Solver solver;
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
       solver.Solve({{1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {}},
                    4);
@@ -21,7 +29,7 @@ TEST(SolverTest, NoSolutions) {
 }
 
 TEST(SolverTest, Medium) {
-  Solver solver(50);
+  Solver solver;
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
       solver.Solve(
           {
@@ -43,7 +51,7 @@ TEST(SolverTest, Medium) {
 }
 
 TEST(SolverTest, Large) {
-  Solver solver(50);
+  Solver solver;
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
       solver.Solve(
           {

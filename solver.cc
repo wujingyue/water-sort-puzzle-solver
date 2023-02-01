@@ -1,5 +1,11 @@
 #include "solver.h"
 
+#include <utility>
+#include <vector>
+
+#include "absl/status/statusor.h"
+
+#include "astar.h"
 #include "idastar.h"
 #include "state.h"
 
@@ -16,9 +22,9 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
   // up the search, and
   // 3. is guaranteed to find the shortest solution as long as the
   // heuristic function is admissible.
-  IterativeDeepeningAStar idastar;
+  AStar astar;
   std::vector<std::pair<int, int>> solution;
-  if (!idastar.Solve(*initial_state, solution)) {
+  if (!astar.Solve(*initial_state, solution)) {
     return absl::NotFoundError("Failed to find a solution.");
   }
   return solution;

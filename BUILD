@@ -10,6 +10,16 @@ cc_library(
 )
 
 cc_library(
+    name = "astar",
+    srcs = ["astar.cc"],
+    hdrs = ["astar.h"],
+    deps = [
+        ":state",
+        "@com_google_absl//absl/log",
+    ],
+)
+
+cc_library(
     name = "idastar",
     srcs = ["idastar.cc"],
     hdrs = ["idastar.h"],
@@ -24,6 +34,7 @@ cc_library(
     srcs = ["solver.cc"],
     hdrs = ["solver.h"],
     deps = [
+        ":astar",
         ":idastar",
         ":state",
         "@com_google_absl//absl/status:statusor",

@@ -1,7 +1,6 @@
 #ifndef _SOLVER_H
 #define _SOLVER_H
 
-#include <unordered_set>
 #include <utility>
 #include <vector>
 

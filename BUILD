@@ -47,6 +47,9 @@ cc_test(
     srcs = ["solver_test.cc"],
     deps = [
         ":solver",
+        "@com_google_absl//absl/flags:parse",
+        "@com_google_absl//absl/log:flags",  # for flags like --stderrthreshold
+        "@com_google_absl//absl/log:initialize",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -56,5 +59,8 @@ cc_binary(
     srcs = ["main.cc"],
     deps = [
         ":solver",
+        "@com_google_absl//absl/flags:parse",
+        "@com_google_absl//absl/log:flags",  # for flags like --stderrthreshold
+        "@com_google_absl//absl/log:initialize",
     ],
 )

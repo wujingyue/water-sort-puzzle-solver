@@ -4,9 +4,15 @@
 #include <unordered_map>
 #include <vector>
 
+#include "absl/flags/parse.h"
+#include "absl/log/initialize.h"
+
 #include "solver.h"
 
 int main(int argc, char* argv[]) {
+  absl::ParseCommandLine(argc, argv);
+  absl::InitializeLog();
+
   int num_tubes;
   int volume;
   std::cin >> num_tubes >> volume;

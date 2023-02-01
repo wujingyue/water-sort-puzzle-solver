@@ -1,6 +1,8 @@
 #include <iostream>
 
-#include <gtest/gtest.h>
+#include "absl/flags/parse.h"
+#include "absl/log/initialize.h"
+#include "gtest/gtest.h"
 
 #include "solver.h"
 
@@ -73,4 +75,11 @@ TEST(SolverTest, Large) {
           4);
   ASSERT_TRUE(solution.ok());
   EXPECT_EQ(solution->size(), 41);
+}
+
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&argc, argv);
+  absl::ParseCommandLine(argc, argv);
+  absl::InitializeLog();
+  return RUN_ALL_TESTS();
 }

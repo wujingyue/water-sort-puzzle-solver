@@ -14,6 +14,7 @@ cc_library(
     srcs = ["astar.cc"],
     hdrs = ["astar.h"],
     deps = [
+        ":solver",
         ":state",
         "@com_google_absl//absl/log",
     ],
@@ -24,6 +25,7 @@ cc_library(
     srcs = ["idastar.cc"],
     hdrs = ["idastar.h"],
     deps = [
+        ":solver",
         ":state",
         "@com_google_absl//absl/log",
     ],
@@ -31,8 +33,18 @@ cc_library(
 
 cc_library(
     name = "solver",
-    srcs = ["solver.cc"],
     hdrs = ["solver.h"],
+    deps = [
+        ":state",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_library(
+    name = "solve_api",
+    hdrs = ["solve_api.h"],
+    srcs = ["solve_api.cc"],
     deps = [
         ":astar",
         ":idastar",
@@ -46,7 +58,7 @@ cc_test(
     name = "solver_test",
     srcs = ["solver_test.cc"],
     deps = [
-        ":solver",
+        ":solve_api",
         "@com_google_absl//absl/flags:parse",
         "@com_google_absl//absl/log:flags",  # for flags like --stderrthreshold
         "@com_google_absl//absl/log:initialize",
@@ -58,7 +70,7 @@ cc_binary(
     name = "main",
     srcs = ["main.cc"],
     deps = [
-        ":solver",
+        ":solve_api",
         "@com_google_absl//absl/flags:parse",
         "@com_google_absl//absl/log:flags",  # for flags like --stderrthreshold
         "@com_google_absl//absl/log:initialize",

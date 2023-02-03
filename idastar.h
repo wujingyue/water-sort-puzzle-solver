@@ -4,12 +4,13 @@
 #include <utility>
 #include <vector>
 
+#include "solver.h"
 #include "state.h"
 
-class IterativeDeepeningAStar {
+class IterativeDeepeningAStar : public Solver {
  public:
   bool Solve(const State& initial_state,
-             std::vector<std::pair<int, int>>& solution);
+             std::vector<std::pair<int, int>>& solution) override;
 };
 
 #endif  // _IDASTAR_H

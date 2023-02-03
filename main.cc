@@ -7,7 +7,7 @@
 #include "absl/flags/parse.h"
 #include "absl/log/initialize.h"
 
-#include "solver.h"
+#include "solve_api.h"
 
 int main(int argc, char* argv[]) {
   absl::ParseCommandLine(argc, argv);
@@ -39,9 +39,8 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  Solver solver;
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
-      solver.Solve(tubes, volume);
+      Solve(tubes, volume);
   if (!solution.ok()) {
     std::cout << "Color -> ID:" << std::endl;
     for (const auto& [color, id] : color_id) {

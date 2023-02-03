@@ -4,14 +4,13 @@
 #include <utility>
 #include <vector>
 
-#include "absl/status/statusor.h"
-
 #include "state.h"
 
 class Solver {
  public:
-  absl::StatusOr<std::vector<std::pair<int, int>>> Solve(
-      const std::vector<std::vector<int>>& tubes, int volume);
+  virtual ~Solver() {}
+  virtual bool Solve(const State& initial_state,
+                     std::vector<std::pair<int, int>>& solution) = 0;
 };
 
 #endif  // _SOLVER_H

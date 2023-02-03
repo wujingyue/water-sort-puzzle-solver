@@ -5,9 +5,10 @@
 #include <utility>
 #include <vector>
 
+#include "solver.h"
 #include "state.h"
 
-class AStar {
+class AStar : public Solver {
  public:
   struct Operation {
     int from;
@@ -16,7 +17,7 @@ class AStar {
   };
 
   bool Solve(const State& initial_state,
-             std::vector<std::pair<int, int>>& solution);
+             std::vector<std::pair<int, int>>& solution) override;
 
  private:
   void ReconstructPath(State x,

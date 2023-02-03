@@ -9,6 +9,22 @@
 #include "idastar.h"
 #include "state.h"
 
+static absl::Status Verify(State state,
+                           const std::vector<std::pair<int, int>>& solution) {
+  for (const auto& [from, to] : solution) {
+    const int water = state.Pour(from, to);
+    if (water <= 0) {
+      return absl::InvalidArgumentError(absl::StrCat(
+          "Failed to pour from tube ", from + 1, " to tube ", to + 1, "."));
+    }
+  }
+  if (!state.Done()) {
+    return absl::InvalidArgumentError(
+        absl::StrCat("The game has not finished: \n", state.DebugString()));
+  }
+  return absl::OkStatus();
+}
+
 absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
     const std::vector<std::vector<int>>& tubes, const int volume) {
   absl::StatusOr<State> initial_state = State::Create(tubes, volume);
@@ -27,5 +43,11 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solver::Solve(
   if (!astar.Solve(*initial_state, solution)) {
     return absl::NotFoundError("Failed to find a solution.");
   }
+
+  absl::Status solution_is_valid = Verify(*initial_state, solution);
+  if (!solution_is_valid.ok()) {
+    return solution_is_valid;
+  }
+
   return solution;
 }

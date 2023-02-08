@@ -1,5 +1,5 @@
-#ifndef _ASTAR_H
-#define _ASTAR_H
+#ifndef ASTAR_H_
+#define ASTAR_H_
 
 #include <unordered_map>
 #include <utility>
@@ -25,4 +25,4 @@ class AStar : public Solver {
                        std::vector<std::pair<int, int>>& solution);
 };
 
-#endif  // _ASTAR_H
+#endif  // ASTAR_H_

@@ -1,5 +1,5 @@
-#ifndef _SOLVER_H
-#define _SOLVER_H
+#ifndef SOLVER_H_
+#define SOLVER_H_
 
 #include <utility>
 #include <vector>
@@ -13,4 +13,4 @@ class Solver {
                      std::vector<std::pair<int, int>>& solution) = 0;
 };
 
-#endif  // _SOLVER_H
+#endif  // SOLVER_H_

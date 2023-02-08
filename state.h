@@ -1,5 +1,5 @@
-#ifndef _STATE_H
-#define _STATE_H
+#ifndef STATE_H_
+#define STATE_H_
 
 #include <cstddef>
 #include <utility>
@@ -47,4 +47,4 @@ struct hash<State> {
 };
 }  // namespace std
 
-#endif  // _STATE_H
+#endif  // STATE_H_

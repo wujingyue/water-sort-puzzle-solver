@@ -1,5 +1,5 @@
-#ifndef _IDASTAR_H
-#define _IDASTAR_H
+#ifndef IDASTAR_H_
+#define IDASTAR_H_
 
 #include <utility>
 #include <vector>
@@ -13,4 +13,4 @@ class IterativeDeepeningAStar : public Solver {
              std::vector<std::pair<int, int>>& solution) override;
 };
 
-#endif  // _IDASTAR_H
+#endif  // IDASTAR_H_

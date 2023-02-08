@@ -1,5 +1,5 @@
-#ifndef _SOLVE_API_H
-#define _SOLVE_API_H
+#ifndef SOLVE_API_H_
+#define SOLVE_API_H_
 
 #include <utility>
 #include <vector>
@@ -20,4 +20,4 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solve(
     const std::vector<std::vector<int>>& tubes, int volume,
     Algorithm algorithm = Algorithm::kIterativeDeepeningAStar);
 
-#endif  // _SOLVE_API_H
+#endif  // SOLVE_API_H_

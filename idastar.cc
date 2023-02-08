@@ -1,6 +1,7 @@
 #include "idastar.h"
 
 #include <chrono>
+#include <unordered_map>
 
 #include "absl/log/log.h"
 #include "state.h"

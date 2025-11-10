@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "absl/status/statusor.h"
+#include "absl/strings/str_cat.h"
 
 #include "astar.h"
 #include "idastar.h"

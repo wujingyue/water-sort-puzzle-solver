@@ -1,35 +1,35 @@
-#include <iostream>
-
 #include "absl/flags/parse.h"
 #include "absl/log/initialize.h"
+
 #include "gtest/gtest.h"
+
 #include "solve_api.h"
 
-class SolverTest : public testing::TestWithParam<Algorithm> {};
+using SolverTest = testing::TestWithParam<Algorithm>;
 
 TEST_P(SolverTest, Small) {
-  const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
+  const absl::StatusOr<Solution> solution =
       Solve({{1, 1, 1, 2}, {2, 2, 2, 1}, {}}, 4, GetParam());
   ASSERT_TRUE(solution.ok());
   EXPECT_EQ(solution->size(), 3);
 }
 
 TEST_P(SolverTest, ZeroMoves) {
-  const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
+  const absl::StatusOr<Solution> solution =
       Solve({{1, 1, 1, 1}, {2, 2, 2, 2}, {}}, 4, GetParam());
   ASSERT_TRUE(solution.ok());
   EXPECT_EQ(solution->size(), 0);
 }
 
 TEST_P(SolverTest, NoSolutions) {
-  const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
+  const absl::StatusOr<Solution> solution =
       Solve({{1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {}}, 4,
             GetParam());
   ASSERT_FALSE(solution.ok());
 }
 
 TEST_P(SolverTest, Medium) {
-  const absl::StatusOr<std::vector<std::pair<int, int>>> solution = Solve(
+  const absl::StatusOr<Solution> solution = Solve(
       {
           {8, 1, 1, 5},
           {4, 9, 6, 7},
@@ -49,7 +49,7 @@ TEST_P(SolverTest, Medium) {
 }
 
 TEST_P(SolverTest, Large) {
-  const absl::StatusOr<std::vector<std::pair<int, int>>> solution = Solve(
+  const absl::StatusOr<Solution> solution = Solve(
       {
           {7, 7, 4, 8},
           {11, 5, 10, 9},

@@ -3,9 +3,7 @@
 #include <algorithm>
 #include <queue>
 #include <unordered_map>
-#include <unordered_set>
 #include <utility>
-#include <vector>
 
 #include "absl/log/log.h"
 
@@ -13,16 +11,15 @@ struct StateAndFScore {
   State state;
   int f_score;
 
-  bool operator<(const StateAndFScore& other) const {
+  bool operator<(const StateAndFScore &other) const {
     return f_score > other.f_score;
   }
 };
 
-bool AStar::Solve(
-    const State& initial_state, std::vector<std::pair<int, int>>& solution) {
+bool AStar::Solve(const State &initial_state, Solution &solution) {
   std::priority_queue<StateAndFScore> pq;
   std::unordered_map<State, int> shortest_moves;
-  std::unordered_map<State, Operation> reaching_op;
+  std::unordered_map<State, Step> reaching_op;
 
   pq.push({initial_state, initial_state.EstimatedMovesToEnd()});
   shortest_moves[initial_state] = 0;
@@ -55,7 +52,7 @@ bool AStar::Solve(
               shortest_moves.at(x) > moves_from_start + 1) {
             pq.push({x, moves_from_start + 1 + x.EstimatedMovesToEnd()});
             shortest_moves[x] = moves_from_start + 1;
-            reaching_op[x] = {from, to, water};
+            reaching_op[x] = {from, to, water, x.TopColor(to)};
           }
           x.Pour(to, from, water);
         }
@@ -66,15 +63,15 @@ bool AStar::Solve(
   return false;
 }
 
-void AStar::ReconstructPath(
-    State x, const std::unordered_map<State, Operation>& reaching_op,
-    std::vector<std::pair<int, int>>& solution) {
+void AStar::ReconstructPath(State x,
+                            const std::unordered_map<State, Step> &reaching_op,
+                            Solution &solution) {
   while (true) {
-    const auto& op = reaching_op.at(x);
+    const auto &op = reaching_op.at(x);
     if (op.from == -1 && op.to == -1) {
       break;
     }
-    solution.push_back({op.from, op.to});
+    solution.push_back({op.from, op.to, op.water, op.color_id});
     x.Pour(op.to, op.from, op.water);
   }
 

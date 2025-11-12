@@ -9,8 +9,7 @@
 
 class IterativeDeepeningAStar : public Solver {
  public:
-  bool Solve(const State& initial_state,
-             std::vector<std::pair<int, int>>& solution) override;
+  bool Solve(const State& initial_state, Solution& solution) override;
 };
 
 #endif  // IDASTAR_H_

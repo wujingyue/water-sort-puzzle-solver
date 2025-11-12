@@ -7,10 +7,9 @@
 
 #include "absl/flags/parse.h"
 #include "absl/log/initialize.h"
-
 #include "solve_api.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   absl::ParseCommandLine(argc, argv);
   absl::InitializeLog();
 
@@ -42,8 +41,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
-      Solve(tubes, volume);
+  const absl::StatusOr<Solution> solution = Solve(tubes, volume);
   if (!solution.ok()) {
     std::cout << "ID -> color:" << std::endl;
     for (auto [id, color] : std::views::enumerate(colors)) {
@@ -53,11 +51,10 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  int move = 0;
-  for (const auto& [from, to]: *solution) {
-    move++;
-    std::cout << "Move " << move << ": " << from + 1 << " " << to + 1
-              << std::endl;
+  for (const auto &[move, step] : std::views::enumerate(*solution)) {
+    std::cout << "Move " << move + 1 << ": " << "Pouring `"
+              << colors.at(step.color_id) << "` from tube " << step.from + 1
+              << " to tube " << step.to + 1 << std::endl;
   }
 
   return 0;

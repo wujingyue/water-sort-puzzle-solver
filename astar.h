@@ -10,19 +10,12 @@
 
 class AStar : public Solver {
  public:
-  struct Operation {
-    int from;
-    int to;
-    int water;
-  };
-
-  bool Solve(const State& initial_state,
-             std::vector<std::pair<int, int>>& solution) override;
+  bool Solve(const State& initial_state, Solution& solution) override;
 
  private:
   void ReconstructPath(State x,
-                       const std::unordered_map<State, Operation>& reaching_op,
-                       std::vector<std::pair<int, int>>& solution);
+                       const std::unordered_map<State, Step>& reaching_op,
+                       Solution& solution);
 };
 
 #endif  // ASTAR_H_

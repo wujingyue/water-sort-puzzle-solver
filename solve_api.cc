@@ -5,19 +5,18 @@
 
 #include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
-
 #include "astar.h"
 #include "idastar.h"
 #include "solver.h"
 #include "state.h"
 
-static absl::Status Verify(State state,
-                           const std::vector<std::pair<int, int>>& solution) {
-  for (const auto& [from, to] : solution) {
-    const int water = state.Pour(from, to);
+static absl::Status Verify(State state, const Solution &solution) {
+  for (const Step &step : solution) {
+    const int water = state.Pour(step.from, step.to);
     if (water <= 0) {
-      return absl::InvalidArgumentError(absl::StrCat(
-          "Failed to pour from tube ", from + 1, " to tube ", to + 1, "."));
+      return absl::InvalidArgumentError(
+          absl::StrCat("Failed to pour color ", step.color_id, " from tube ",
+                       step.from + 1, " to tube ", step.to + 1, "."));
     }
   }
   if (!state.Done()) {
@@ -27,9 +26,8 @@ static absl::Status Verify(State state,
   return absl::OkStatus();
 }
 
-absl::StatusOr<std::vector<std::pair<int, int>>> Solve(
-    const std::vector<std::vector<int>>& tubes, const int volume,
-    const Algorithm algorithm) {
+absl::StatusOr<Solution> Solve(const std::vector<std::vector<int>> &tubes,
+                               const int volume, const Algorithm algorithm) {
   absl::StatusOr<State> initial_state = State::Create(tubes, volume);
   if (!initial_state.ok()) {
     return initial_state.status();
@@ -45,7 +43,7 @@ absl::StatusOr<std::vector<std::pair<int, int>>> Solve(
       break;
   }
 
-  std::vector<std::pair<int, int>> solution;
+  Solution solution;
   if (!solver->Solve(*initial_state, solution)) {
     return absl::NotFoundError("Failed to find a solution.");
   }

@@ -8,19 +8,19 @@
 
 class DfsWithBound {
  public:
-  DfsWithBound(const int bound): bound_(bound) {}
+  DfsWithBound(const int bound) : bound_(bound) {}
 
   // When `x` can reach an end state, this function returns true, modifies `x`
   // to be the reachable end state and stores the solution in `solution`. When
   // `x` cannot reach an end state, this function returns false and leaves `x`
   // and `solution` unmodified.
-  bool Search(State& x, std::vector<std::pair<int, int>>& solution) {
+  bool Search(State &x, Solution &solution) {
     num_visits_++;
 
     // To find the shortest solution, we revisit a state when its number of
     // moves gets improved. In practice, we observed that the search visits a
     // state roughly twice on average.
-    const int moves_from_start = solution.size();
+    const int moves_from_start = std::ssize(solution);
     if (shortest_moves_.count(x) != 0 &&
         shortest_moves_.at(x) <= moves_from_start) {
       return false;
@@ -43,7 +43,7 @@ class DfsWithBound {
           continue;
         }
         if (const int water = x.Pour(from, to); water > 0) {
-          solution.push_back({from, to});
+          solution.push_back({from, to, water, x.TopColor(to)});
           if (Search(x, solution)) {
             return true;
           }
@@ -77,8 +77,8 @@ class DfsWithBound {
   int next_bound_ = std::numeric_limits<int>::max();
 };
 
-bool IterativeDeepeningAStar::Solve(
-    const State& initial_state, std::vector<std::pair<int, int>>& solution) {
+bool IterativeDeepeningAStar::Solve(const State &initial_state,
+                                    Solution &solution) {
   // Make a copy so DfsWithBound::Search can modify the state in place.
   State state(initial_state);
 

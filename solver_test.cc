@@ -3,11 +3,9 @@
 #include "absl/flags/parse.h"
 #include "absl/log/initialize.h"
 #include "gtest/gtest.h"
-
 #include "solve_api.h"
 
-class SolverTest : public testing::TestWithParam<Algorithm> {
-};
+class SolverTest : public testing::TestWithParam<Algorithm> {};
 
 TEST_P(SolverTest, Small) {
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =

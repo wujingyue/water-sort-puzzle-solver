@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <ranges>
 #include <sstream>
 #include <unordered_map>
 #include <vector>
@@ -20,6 +21,8 @@ int main(int argc, char* argv[]) {
   getline(std::cin, line);
 
   std::vector<std::vector<int>> tubes(num_tubes, std::vector<int>());
+  std::vector<std::string> colors;
+  colors.reserve(num_tubes);
   std::unordered_map<std::string, int> color_id;
   for (int i = 0; i < num_tubes; i++) {
     tubes[i].reserve(volume);
@@ -31,20 +34,20 @@ int main(int argc, char* argv[]) {
     std::istringstream iss(line);
     std::string color;
     while (iss >> color) {
-      int& id = color_id[color];
-      if (id == 0) {
-        id = color_id.size();
+      auto [iter, inserted] = color_id.try_emplace(color, std::ssize(colors));
+      if (inserted) {
+        colors.push_back(color);
       }
-      tubes[i].push_back(id);
+      tubes[i].push_back(iter->second);
     }
   }
 
   const absl::StatusOr<std::vector<std::pair<int, int>>> solution =
       Solve(tubes, volume);
   if (!solution.ok()) {
-    std::cout << "Color -> ID:" << std::endl;
-    for (const auto& [color, id] : color_id) {
-      std::cout << "  " << color << " -> " << id << std::endl;
+    std::cout << "ID -> color:" << std::endl;
+    for (auto [id, color] : std::views::enumerate(colors)) {
+      std::cout << "  " << id << " -> " << color << std::endl;
     }
     std::cout << solution.status().message() << std::endl;
     return 1;

@@ -18,7 +18,7 @@ enum class Algorithm {
 // search. It is guaranteed to find the shortest solution as long as the
 // heuristic function is admissible.
 absl::StatusOr<Solution> Solve(
-    const std::vector<std::vector<int>> &tubes, int volume,
+    const std::vector<std::vector<int>>& tubes, int volume,
     Algorithm algorithm = Algorithm::kIterativeDeepeningAStar);
 
 #endif  // SOLVE_API_H_

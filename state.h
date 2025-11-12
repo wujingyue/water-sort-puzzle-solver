@@ -9,10 +9,12 @@
 class State {
  public:
   static absl::StatusOr<State> Create(
-      const std::vector<std::vector<int>> &tubes, int volume);
+      const std::vector<std::vector<int>>& tubes, int volume);
 
   int NumTubes() const { return std::ssize(tubes_); }
+
   int Volume() const { return volume_; }
+
   int TopColor(int tube) const { return tubes_.at(tube).back(); }
 
   int Pour(int from, int to);
@@ -27,7 +29,7 @@ class State {
   // state.
   int EstimatedMovesToEnd() const;
 
-  bool operator==(const State &other) const { return tubes_ == other.tubes_; }
+  bool operator==(const State& other) const { return tubes_ == other.tubes_; }
 
   std::string DebugString() const;
 
@@ -39,7 +41,7 @@ class State {
 namespace std {
 template <>
 struct hash<State> {
-  size_t operator()(const State &s) const { return s.Hash(); }
+  size_t operator()(const State& s) const { return s.Hash(); }
 };
 }  // namespace std
 

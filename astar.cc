@@ -11,12 +11,12 @@ struct StateAndFScore {
   State state;
   int f_score;
 
-  bool operator<(const StateAndFScore &other) const {
+  bool operator<(const StateAndFScore& other) const {
     return f_score > other.f_score;
   }
 };
 
-bool AStar::Solve(const State &initial_state, Solution &solution) {
+bool AStar::Solve(const State& initial_state, Solution& solution) {
   std::priority_queue<StateAndFScore> pq;
   std::unordered_map<State, int> shortest_moves;
   std::unordered_map<State, Step> reaching_op;
@@ -64,10 +64,10 @@ bool AStar::Solve(const State &initial_state, Solution &solution) {
 }
 
 void AStar::ReconstructPath(State x,
-                            const std::unordered_map<State, Step> &reaching_op,
-                            Solution &solution) {
+                            const std::unordered_map<State, Step>& reaching_op,
+                            Solution& solution) {
   while (true) {
-    const auto &op = reaching_op.at(x);
+    const auto& op = reaching_op.at(x);
     if (op.from == -1 && op.to == -1) {
       break;
     }

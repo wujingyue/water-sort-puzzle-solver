@@ -14,7 +14,7 @@ class DfsWithBound {
   // to be the reachable end state and stores the solution in `solution`. When
   // `x` cannot reach an end state, this function returns false and leaves `x`
   // and `solution` unmodified.
-  bool Search(State &x, Solution &solution) {
+  bool Search(State& x, Solution& solution) {
     num_visits_++;
 
     // To find the shortest solution, we revisit a state when its number of
@@ -77,8 +77,8 @@ class DfsWithBound {
   int next_bound_ = std::numeric_limits<int>::max();
 };
 
-bool IterativeDeepeningAStar::Solve(const State &initial_state,
-                                    Solution &solution) {
+bool IterativeDeepeningAStar::Solve(const State& initial_state,
+                                    Solution& solution) {
   // Make a copy so DfsWithBound::Search can modify the state in place.
   State state(initial_state);
 

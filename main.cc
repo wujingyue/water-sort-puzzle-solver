@@ -9,7 +9,7 @@
 #include "absl/log/initialize.h"
 #include "solve_api.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   absl::ParseCommandLine(argc, argv);
   absl::InitializeLog();
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  for (const auto &[move, step] : std::views::enumerate(*solution)) {
+  for (const auto& [move, step] : std::views::enumerate(*solution)) {
     std::cout << "Move " << move + 1 << ": " << "Pouring `"
               << colors.at(step.color_id) << "` from tube " << step.from + 1
               << " to tube " << step.to + 1 << std::endl;

@@ -17,6 +17,7 @@ using Solution = std::vector<Step>;
 class Solver {
  public:
   virtual ~Solver() {}
+
   virtual bool Solve(const State& initial_state, Solution& solution) = 0;
 };
 

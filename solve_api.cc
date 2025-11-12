@@ -10,8 +10,8 @@
 #include "solver.h"
 #include "state.h"
 
-static absl::Status Verify(State state, const Solution &solution) {
-  for (const Step &step : solution) {
+static absl::Status Verify(State state, const Solution& solution) {
+  for (const Step& step : solution) {
     const int water = state.Pour(step.from, step.to);
     if (water <= 0) {
       return absl::InvalidArgumentError(
@@ -26,7 +26,7 @@ static absl::Status Verify(State state, const Solution &solution) {
   return absl::OkStatus();
 }
 
-absl::StatusOr<Solution> Solve(const std::vector<std::vector<int>> &tubes,
+absl::StatusOr<Solution> Solve(const std::vector<std::vector<int>>& tubes,
                                const int volume, const Algorithm algorithm) {
   absl::StatusOr<State> initial_state = State::Create(tubes, volume);
   if (!initial_state.ok()) {

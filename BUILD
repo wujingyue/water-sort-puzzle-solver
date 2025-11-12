@@ -1,3 +1,14 @@
+# BUILD at your workspace root
+load("@hedron_compile_commands//:refresh_compile_commands.bzl",
+     "refresh_compile_commands")
+
+refresh_compile_commands(
+    name = "refresh_compile_commands",
+    targets = ["//..."],
+    exclude_headers = "external",      # avoids (-xc++-header) for externals
+    exclude_external_sources = True,   # keeps compdb lean & avoids crashes
+)
+
 cc_library(
     name = "state",
     srcs = ["state.cc"],
